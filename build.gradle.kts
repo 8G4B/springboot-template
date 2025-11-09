@@ -1,12 +1,29 @@
 plugins {
 	java
-	id("org.springframework.boot") version "4.0.0-RC1"
+	id("org.springframework.boot") version "4.0.0-RC2"
 	id("io.spring.dependency-management") version "1.1.7"
+    id("com.diffplug.spotless") version "8.0.0"
 }
 val springCloudVersion by extra("2025.1.0-M4")
 
 group = "com.github.8g4b"
 version = "1.0"
+
+spotless {
+    java {
+        target("src/main/java/**/*.java", "src/test/java/**/*.java")
+        eclipse()
+        leadingTabsToSpaces(4)
+        importOrder("java", "javax", "org", "com", "")
+        removeUnusedImports()
+        endWithNewline()
+        trimTrailingWhitespace()
+    }
+    kotlinGradle {
+        target("*.gradle.kts")
+        ktlint()
+    }
+}
 
 java {
 	toolchain {
@@ -45,6 +62,7 @@ dependencies {
     // Lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+
     // Development Tools
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
